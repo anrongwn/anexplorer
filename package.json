@@ -1,0 +1,19 @@
+{
+  "name": "anexplorer",
+  "version": "1.0.0",
+  "description": "anrong's explorer based on electron(nodejs)",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "explorer",
+    "lorikeet"
+  ],
+  "author": "anrong_wn@126.com",
+  "license": "GPL-2.0-only",
+  "dependencies": {
+    "electron": "^3.0.7",
+    "log4js": "^3.0.6"
+  }
+}
