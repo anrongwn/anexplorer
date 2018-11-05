@@ -5,4 +5,16 @@ body {
 }
 #toolbar {
     position: absolute;
+    background: red;
+    width: 100%;
+    padding: 1em;
+}
+
+#current-folder {
+    float: left;
+    color: white;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.5em 1em;
+    min-width: 10em;
+    border-radius: 0.2em;
 }
