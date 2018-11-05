@@ -5,14 +5,14 @@ body {
 }
 #toolbar {
     position: absolute;
-    background: red;
+    background: rgb(255, 102, 0);
     width: 100%;
     padding: 1em;
 }
 
 #current-folder {
     float: left;
-    color: white;
+    color: rgb(167, 98, 98);
     background: rgba(0, 0, 0, 0.2);
     padding: 0.5em 1em;
     min-width: 10em;
