@@ -8,8 +8,12 @@ let mainWindow = null;
 const debug = (process.argv.indexOf('--debug')>=0);
 
 function createMainWindow(){
+    console.log('main process createMainWindow.');
+    
     mainWindow = new BrowserWindow({width: 800, height: 600});
-    mainWindow.loadFile('index.html');
+    
+    //mainWindow.loadFile('index.html');
+    mainWindow.loadFile('loadfile.html');
 
     //
     if (debug){
