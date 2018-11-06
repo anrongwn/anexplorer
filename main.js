@@ -4,6 +4,7 @@ const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
+
 //
 const log4js = require('log4js');
 const log4js_config = require('./logs/log4js.json');
@@ -11,68 +12,77 @@ log4js.configure(log4js_config);
 let logger = log4js.getLogger('date_log');
 
 
-let mainWindow = null;
-let netWindow = null;
+let customerWindow = null;      //客户屏进程
+let maintenanceWindow = null;   //维护屏进程
+let netWindow = null;           //报文通信进程
+let devWindow = null;           //设备进程
 const debug = (process.argv.indexOf('--debug') >= 0);
 
-function createMainWindow() {
-    //console.log('main process createMainWindow.');
-    logger.info(`[${process.pid}] main process createMainWindow.`);
+function createCustomerWindow() {
+    //console.log('main process createcustomerWindow.');
+    logger.info(`[${process.pid}] main process createcustomerWindow.`);
 
-    mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
-        title:'anExplorer UI process',
-        show:true
+    let Screen = electron.screen;
+    let size = Screen.getPrimaryDisplay().workArea;
+    customerWindow = new BrowserWindow({
+        width: size.width,
+        height: size.height,
+        title: 'anExplorer UI process',
+        show: true
     });
 
-    mainWindow.loadFile('index.html');
-    //mainWindow.show();
-
+    customerWindow.loadFile('index.html');
+    //customerWindow.show();
 
     //
     if (debug) {
-        //mainWindow.webContents.openDevTools();
-        //mainWindow.setAlwaysOnTop(true);
-        //mainWindow.setKiosk(true);
-    }
+        //customerWindow.webContents.openDevTools();
+        //customerWindow.setAlwaysOnTop(true);
+        //customerWindow.setKiosk(true);
+    };
 
-    
-    mainWindow.on('closed', () => {
+    customerWindow.on('closed', () => {
         //
-        if ((null!==netWindow)&&(false===netWindow.isVisible())){
+        if ((null !== netWindow) && (false === netWindow.isVisible())) {
             netWindow.close();
         }
 
-        mainWindow = null;
-        logger.info(`[${process.pid}] main process mainWindow closed.`);
-        
-    })
+        customerWindow = null;
+        logger.info(`[${process.pid}] main process customerWindow closed.`);
+
+    });
 };
 
 
 
 function createNetWindow() {
+    let Screen = electron.screen;
+
+    let displays = Screen.getAllDisplays();
+    let externalDisplay = null;
+    for(let i in displays){
+        logger.info(`[${process.pid}] display id = ${displays[i].id}`);
+    }
     netWindow = new BrowserWindow({
         width: 800,
         height: 600,
-        title:'anExplorer net process',
-        show:false
+        title: 'anExplorer net process',
+        show: false
     });
 
-    netWindow.loadFile('loadfile.html');
+    netWindow.loadFile('netWindow.html');
 
-    if (debug){
+    if (debug) {
         netWindow.show();
     }
-    
+
 
     //
     if (debug) {
         netWindow.webContents.openDevTools();
     }
 
-    netWindow.on('page-title-updated', (event, title)=>{
+    netWindow.on('page-title-updated', (event, title) => {
         console.log(`new title=${title}`);
     });
 
@@ -81,11 +91,11 @@ function createNetWindow() {
     });
 };
 
-//app.on('ready', createMainWindow);
+//app.on('ready', createcustomerWindow);
 app.on('ready', () => {
-    createMainWindow();
-    
-    //createNetWindow();
+    createCustomerWindow();
+
+    createNetWindow();
 
     /*
     require('electron').powerMonitor.on('on-battery', () => {
@@ -96,8 +106,6 @@ app.on('ready', () => {
         console.log('pc on ac work mode');
     });
     */
-
-
 });
 
 app.on('window-all-closed', () => {
@@ -111,8 +119,8 @@ app.on('window-all-closed', () => {
 /*
 app.on('activate', (event, hasVisibleWindows)=>{
     
-    if ((hasVisibleWindows===false) || (mainWindow===null)){
-        createMainWindow();
+    if ((hasVisibleWindows===false) || (customerWindow===null)){
+        createcustomerWindow();
     }
     
 });
