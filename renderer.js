@@ -6,6 +6,13 @@ const stick = require('./lib/core');
 const msgCenter = require('./lib/msgCenter');
 const msgBuffer = new msgCenter();
 
+//
+const log4js = require('log4js');
+const log4js_config = require('./logs/log4js.json');
+log4js.configure(log4js_config);
+let logger = log4js.getLogger('date_log');
+
+
 // 获取按钮和容器的DOM节点
 var content = document.getElementById('filedata');
 var button = document.getElementById('btn');
@@ -17,6 +24,8 @@ var button = document.getElementById('btn');
  */
 let send_count=0;
 button.addEventListener('click', (e)=>{
+    logger.info(`net processid=${process.pid} button click event.`);
+
     fs.readFile('./1.txt', 'utf8', (err, data)=>{
         if(err===null){
             content.innerText = data;
