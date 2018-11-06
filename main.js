@@ -3,6 +3,7 @@
 const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+const ipcMain = electron.ipcMain;
 
 
 //
@@ -10,12 +11,12 @@ const log4js = require('log4js');
 const log4js_config = require('./logs/log4js.json');
 log4js.configure(log4js_config);
 let logger = log4js.getLogger('date_log');
+let sleep = require('./sleep');
 
-
-let customerWindow = null;      //客户屏进程
-let maintenanceWindow = null;   //维护屏进程
-let netWindow = null;           //报文通信进程
-let devWindow = null;           //设备进程
+let customerWindow = null; //客户屏进程
+let maintenanceWindow = null; //维护屏进程
+let netWindow = null; //报文通信进程
+let devWindow = null; //设备进程
 const debug = (process.argv.indexOf('--debug') >= 0);
 
 function createCustomerWindow() {
@@ -27,11 +28,11 @@ function createCustomerWindow() {
     customerWindow = new BrowserWindow({
         width: size.width,
         height: size.height,
-        title: 'anExplorer UI process',
+        title: 'anExplorer Customer process',
         show: true
     });
 
-    customerWindow.loadFile('index.html');
+    customerWindow.loadFile('customer.html');
     //customerWindow.show();
 
     //
@@ -40,6 +41,10 @@ function createCustomerWindow() {
         //customerWindow.setAlwaysOnTop(true);
         //customerWindow.setKiosk(true);
     };
+
+    customerWindow.webContents.on('did-finish-load', () => {
+        customerWindow.webContents.send('init', 'initUI');
+    });
 
     customerWindow.on('closed', () => {
         //
@@ -60,7 +65,7 @@ function createNetWindow() {
 
     let displays = Screen.getAllDisplays();
     let externalDisplay = null;
-    for(let i in displays){
+    for (let i in displays) {
         logger.info(`[${process.pid}] display id = ${displays[i].id}`);
     }
     netWindow = new BrowserWindow({
@@ -82,6 +87,10 @@ function createNetWindow() {
         netWindow.webContents.openDevTools();
     }
 
+    netWindow.webContents.on('did-finish-load', () => {
+        netWindow.webContents.send('net', 'sign-in');
+    });
+
     netWindow.on('page-title-updated', (event, title) => {
         console.log(`new title=${title}`);
     });
@@ -94,7 +103,7 @@ function createNetWindow() {
 //app.on('ready', createcustomerWindow);
 app.on('ready', () => {
     createCustomerWindow();
-
+    
     createNetWindow();
 
     /*
@@ -129,3 +138,15 @@ app.on('activate', (event, hasVisibleWindows)=>{
 app.on('before-quit', () => {
 
 });
+
+
+ipcMain.on('net-sign-in', (event, message) => {
+    logger.info(`[${process.pid}] ipcMain recv [net-sign-in] event, message=${message}`);
+    switch (message) {
+        case 'ok':
+            customerWindow.webContents.send('init', 'sign-in-ok');
+            break;
+        default:
+            break;
+    }
+})

@@ -6,6 +6,10 @@ const stick = require('./lib/core');
 const msgCenter = require('./lib/msgCenter');
 const msgBuffer = new msgCenter();
 
+const electron = require('electron');
+const ipcRenderer = electron.ipcRenderer;
+let sleep = require('./sleep');
+
 //
 const log4js = require('log4js');
 const log4js_config = require('./logs/log4js.json');
@@ -22,15 +26,15 @@ var button = document.getElementById('btn');
  * 当按钮点击的时候读取当前目录下的 1.text
  * 之后将里面的内容放到content 之中
  */
-let send_count=0;
-button.addEventListener('click', (e)=>{
+let send_count = 0;
+button.addEventListener('click', (e) => {
     logger.info(`net processid=${process.pid} button click event.`);
 
-    fs.readFile('./1.txt', 'utf8', (err, data)=>{
-        if(err===null){
+    fs.readFile('./1.txt', 'utf8', (err, data) => {
+        if (err === null) {
             content.innerText = data;
         }
-        
+
     });
 
     let client = net.createConnection({
@@ -70,3 +74,13 @@ button.addEventListener('click', (e)=>{
 
 });
 
+ipcRenderer.on('net', (event, message) => {
+    switch (message) {
+        case 'sign-in':
+            //sleep.sleep(100);
+            ipcRenderer.send('net-sign-in', 'ok');
+            break;
+        default:
+            break;
+    }
+});
