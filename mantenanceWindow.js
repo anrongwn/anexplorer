@@ -60,7 +60,6 @@ button.addEventListener('click', (e) => {
    
 });
 
-
 ipcRenderer.on('asynchronous-message', (event, message) => {
     switch (message.id) {
         case 'initStatus':
