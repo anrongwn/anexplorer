@@ -21,13 +21,28 @@ function initUI(data, hidden) {
  * @param  {} =>{switch(message
  * @param  {initUI(} {case'initUI'
  */
-ipcRenderer.on('init', (event, message) => {
-    switch (message) {
+ipcRenderer.on('asynchronous-message', (event, message) => {
+    switch (message.id) {
         case 'initUI':
             initUI('初始设备......', true);
             break;
         case 'sign-in-ok':
             initUI('签到成功...', false);
+            break;
+        case 'run0':
+            initUI('enter mantenace mode......', true);
+            break;
+        case 'run1':
+            initUI('run mode......', false);
+            break;
+        case 'sign-in':
+            if('ok'===message.return_code){
+                initUI('sign-in successed.....', false);
+            }
+            else{
+                initUI('sign-in failed.....', true);
+            }
+            
             break;
         default:
             initUI('no no......', false);
