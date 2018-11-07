@@ -9,7 +9,9 @@
   },
   "keywords": [
     "explorer",
-    "lorikeet"
+    "lorikeet",
+    "wosa/xfs",
+    "ATMC"
   ],
   "author": "anrong_wn@126.com",
   "license": "GPL-2.0-only",
