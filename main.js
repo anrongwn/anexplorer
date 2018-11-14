@@ -172,7 +172,6 @@ function createNetWindow() {
         //netWindow.show();
     }
 
-
     //
     if (debug) {
         netWindow.webContents.openDevTools();
@@ -201,8 +200,6 @@ function createNetWindow() {
 app.on('ready', () => {
     createCustomerWindow();
     createMantenanceWindow();
-
-    //createNetWindow();
 
     /*
     require('electron').powerMonitor.on('on-battery', () => {
