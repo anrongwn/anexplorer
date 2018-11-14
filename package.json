@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"electron . --debug"
+    "start": "electron . --debug"
   },
   "keywords": [
     "explorer",
@@ -16,7 +16,19 @@
   "author": "anrong_wn@126.com",
   "license": "GPL-2.0-only",
   "dependencies": {
-    "electron": "^3.0.7",
+    "electron": "^3.0.9",
     "log4js": "^3.0.6"
-  }
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anrongwn/anexplorer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/anrongwn/anexplorer/issues"
+  },
+  "homepage": "https://github.com/anrongwn/anexplorer#readme"
 }
